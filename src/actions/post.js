@@ -63,4 +63,53 @@ const createPost = async (prev, formData) => {
   redirect(`/post/${data.id}`)
 }
 
-export { createPost, getAllPosts, getSinglePost }
+const updatePost = async (prev, formData) => {
+  const { postID } = prev
+
+  const supabase = await createClientForServer()
+
+  const formFields = {
+    title: formData.get('title'),
+    content: formData.get('content'),
+    isPublic: formData.get('isPublic') === 'on',
+  }
+
+  const { data, error } = await supabase
+    .from('posts')
+    .update(formFields)
+    .eq('id', 'dfdfws')
+
+  if (error) {
+    return {
+      error: error.message,
+      formFields,
+      postID,
+    }
+  }
+
+  return {
+    postID,
+    formFields,
+    success: 'Post updated successfully',
+    error: '',
+  }
+}
+
+const deletePost = async (prev, formData) => {
+  const { postID } = prev
+
+  const supabase = await createClientForServer()
+
+  const { error } = await supabase.from('posts').delete().eq('id', postID)
+
+  if (error) {
+    return {
+      error: error.message,
+      postID,
+    }
+  }
+
+  redirect('/')
+}
+
+export { createPost, getAllPosts, getSinglePost, updatePost, deletePost }
