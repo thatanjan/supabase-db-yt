@@ -3,6 +3,36 @@
 import createClientForServer from '@/utils/supabase/server'
 import { redirect } from 'next/navigation'
 
+const getAllPosts = async () => {
+  const supabase = await createClientForServer()
+
+  const { data, error } = await supabase
+    .from('posts')
+    // .select('id, title, content')
+    .select('*')
+  // .select('*, is_public:isPublic')
+
+  return {
+    error: error?.message,
+    posts: data,
+  }
+}
+
+const getSinglePost = async id => {
+  const supabase = await createClientForServer()
+
+  const { data, error } = await supabase
+    .from('posts')
+    .select('*')
+    .eq('id', id)
+    .single()
+
+  return {
+    error: error?.message,
+    post: data,
+  }
+}
+
 const createPost = async (prev, formData) => {
   const supabase = await createClientForServer()
 
@@ -23,8 +53,6 @@ const createPost = async (prev, formData) => {
     .select()
     .single()
 
-  console.log(data, error)
-
   if (error) {
     return {
       error: error.message,
@@ -35,4 +63,4 @@ const createPost = async (prev, formData) => {
   redirect(`/post/${data.id}`)
 }
 
-export { createPost }
+export { createPost, getAllPosts, getSinglePost }

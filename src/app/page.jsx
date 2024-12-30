@@ -1,7 +1,12 @@
+import { getAllPosts } from '@/actions/post'
+import Posts from '@/components/Posts'
+
 const Home = async () => {
+  const { posts } = await getAllPosts()
+
   return (
     <div>
-      <h1>Supabase Database</h1>
+      <Posts posts={posts} />
     </div>
   )
 }
