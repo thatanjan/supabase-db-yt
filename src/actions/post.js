@@ -8,9 +8,9 @@ const getAllPosts = async () => {
 
   const { data, error } = await supabase
     .from('posts')
-    // .select('id, title, content')
+    // .select('id, title, content') // Select specific columns
     .select('*')
-  // .select('*, is_public:isPublic')
+  // .select('*, is_public:isPublic') // Rename column
 
   return {
     error: error?.message,
@@ -49,7 +49,7 @@ const createPost = async (prev, formData) => {
   const { data, error } = await supabase
     .from('posts')
     .insert(payload)
-    // .insert([payload, payload, payload])
+    // .insert([payload, payload, payload]) // Insert multiple rows
     .select()
     .single()
 
@@ -77,7 +77,7 @@ const updatePost = async (prev, formData) => {
   const { data, error } = await supabase
     .from('posts')
     .update(formFields)
-    .eq('id', 'dfdfws')
+    .eq('id', postID)
 
   if (error) {
     return {
