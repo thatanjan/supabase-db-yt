@@ -1,7 +1,10 @@
+import { login, logout } from '@/actions/login'
+import createClientForServer from '@/utils/supabase/server'
 import Link from 'next/link'
 
 const Nav = async () => {
-  const session = {}
+  const supabase = await createClientForServer()
+  const session = await supabase.auth.getUser()
 
   return (
     <nav className='flex flex-nowrap justify-between items-center mb-5'>
@@ -19,7 +22,7 @@ const Nav = async () => {
 
         <form className=' self-center'>
           {session.error ? (
-            <button type='submit' className='btn btn-info'>
+            <button type='submit' formAction={login} className='btn btn-info'>
               Login
             </button>
           ) : (
@@ -30,6 +33,7 @@ const Nav = async () => {
               <button
                 className='btn ml-2 self-center btn-success'
                 href='/dashboard'
+                formAction={logout}
               >
                 Logout
               </button>
