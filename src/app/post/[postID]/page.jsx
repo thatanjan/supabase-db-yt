@@ -6,6 +6,7 @@ const Page = async ({ params }) => {
   const { postID } = await params
 
   const { post } = await getSinglePost(postID)
+  const { user } = post
 
   return (
     <div>
@@ -17,7 +18,7 @@ const Page = async ({ params }) => {
         </Link>
       </div>
       <p className='line-clamp-3 text-gray-500 text-sm  mb-5'>
-        Created at {new Date(post.createdAt).toDateString()}{' '}
+        Created by {user.name} at {new Date(post.createdAt).toDateString()}{' '}
       </p>
 
       <p className='pr-10 whitespace-break-spaces'>{post.content}</p>

@@ -1,13 +1,26 @@
 import Link from 'next/link'
 
-const Post = ({ title, content, id, isPublic, createdAt }) => {
+const Post = ({
+  totalLikes,
+  totalComments,
+  title,
+  content,
+  id,
+  isPublic,
+  createdAt,
+  user,
+}) => {
   return (
     <div className='card bg-base-100 w-96 shadow-xl'>
       <div className='card-body'>
         <h2 className='card-title'>{title}</h2>
         <p className='line-clamp-3 text-gray-500 text-sm'>
-          Created at {new Date(createdAt).toDateString()}{' '}
+          Created by {user.name} at {new Date(createdAt).toDateString()}{' '}
         </p>
+
+        <div>total likes {totalLikes}</div>
+        <div>total comments {totalComments}</div>
+
         <p className='line-clamp-3'>{content}</p>
 
         <div className='card-actions justify-end'>

@@ -3,14 +3,38 @@
 import createClientForServer from '@/utils/supabase/server'
 import { redirect } from 'next/navigation'
 
-const getAllPosts = async () => {
+const getAllPosts = async (options = {}) => {
+  const { onlyPublic = true, userID = '' } = options
+
   const supabase = await createClientForServer()
 
-  const { data, error } = await supabase
+  let query = supabase
     .from('posts')
     // .select('id, title, content') // Select specific columns
-    .select('*')
-  // .select('*, is_public:isPublic') // Rename column
+    // .select('*, is_public:isPublic') // Rename column
+    // .select('*') // Select all columns
+    .select('*, user (id, name)') // Join users table
+
+  // Fetching only public posts
+  if (onlyPublic) {
+    query = query.eq('isPublic', true)
+  }
+
+  // Fetching posts by user
+  if (userID) {
+    query = query.eq('user', userID)
+  }
+
+  // filters
+  // query = query
+  // .gt('totalLikes', 100).gt('totalComments', 30)
+  // .lt('totalComments', 30)
+  // .order('totalLikes', { ascending: false })
+
+  // Fetching only private posts
+  // query = query.neq('isPublic', true)
+
+  const { data, error } = await query
 
   return {
     error: error?.message,
@@ -23,7 +47,7 @@ const getSinglePost = async id => {
 
   const { data, error } = await supabase
     .from('posts')
-    .select('*')
+    .select('*, user (id, name)')
     .eq('id', id)
     .single()
 
